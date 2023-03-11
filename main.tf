@@ -40,3 +40,22 @@ resource "aws_route" "k8s_cluster_rtb_internet_gateway_route" {
   gateway_id             = aws_internet_gateway.k8s_cluster_igw.id
 }
 
+resource "aws_route_table_association" "k8s_cluster_rtb_subnet_association" {
+  subnet_id      = aws_subnet.k8s_cluster_subnet.id
+  route_table_id = aws_route_table.k8s_cluster_rtb.id
+}
+module "iam_module_master" {
+  source    = "./module/iam_module_master"
+  vpc_id    = aws_vpc.k8s_cluster_vpc
+  subnet_id = aws_subnet.k8s_cluster_subnet
+}
+
+module "iam_module_worker" {
+  source    = "./module/iam_module_worker"
+  vpc_id    = aws_vpc.k8s_cluster_vpc
+  subnet_id = aws_subnet.k8s_cluster_subnet
+}
+
+
+
+
